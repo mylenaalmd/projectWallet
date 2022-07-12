@@ -6,24 +6,23 @@ class Wallet extends React.Component {
   state = {
     valor: 0,
     cambio: 'BRL',
-    currencies: [],
   }
 
-  componentDidMount = () => {
-    this.currenciesApi();
-  }
+  // componentDidMount = () => {
+  //   this.currenciesApi();
+  // }
 
-  currenciesApi = async () => {
-    const retornoApi = await fetch('https://economia.awesomeapi.com.br/json/all')
-      .then((item) => item.json())
-      .then((json) => json);
-    this.setState({ currencies: [...retornoApi] });
-    console.log(retornoApi);
-  }
+  // currenciesApi = async () => {
+  //   const retornoApi = await fetch('https://economia.awesomeapi.com.br/json/all')
+  //     .then((item) => item.json())
+  //     .then((json) => json);
+  //   this.setState({ currencies: [...retornoApi] });
+  //   console.log(retornoApi);
+  // }
 
   render() {
     const { valor, cambio,
-      currencies,
+      // currencies,
     } = this.state;
     const { email } = this.props;
     return (
@@ -34,14 +33,14 @@ class Wallet extends React.Component {
           <h2 data-testid="header-currency-field">{cambio}</h2>
         </header>
         <div>
-          <h5>
+          {/* <h5>
             {
               currencies.filter((item) => (
                 <h4>{item}</h4>
               ))
             }
 
-          </h5>
+          </h5> */}
         </div>
       </div>
     );
