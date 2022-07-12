@@ -1,9 +1,51 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import propTypes from 'prop-types';
 
 class Wallet extends React.Component {
+  state = {
+    valor: 0,
+    cambio: '',
+    // currencies: [],
+  }
+
+  componentDidMount = () => {
+    this.currenciesApi();
+  }
+
+  currenciesApi = async () => {
+    const retornoApi = await fetch('https://economia.awesomeapi.com.br/json/all')
+      .then((item) => item.json())
+      .then((data) => data);
+    console.log(retornoApi);
+  }
+
   render() {
-    return <div>TrybeWallet</div>;
+    const { valor, cambio,
+      // currencies
+    } = this.state;
+    const { email } = this.props;
+    return (
+      <div>
+        <header>
+          <h2 data-testid="email-field">{email}</h2>
+          <h2 data-testid="total-field">{valor}</h2>
+          <h2 data-testid="header-currency-field">{cambio}</h2>
+        </header>
+        <div>
+          <h5>currency</h5>
+        </div>
+      </div>
+    );
   }
 }
 
-export default Wallet;
+const mapStateToProps = (state) => ({
+  email: state.user.email,
+});
+
+Wallet.propTypes = {
+  email: propTypes.string.isRequired,
+};
+
+export default connect(mapStateToProps)(Wallet);
