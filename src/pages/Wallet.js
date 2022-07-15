@@ -1,58 +1,63 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
+import { currenciesApi } from '../actions';
+import ExpensesForm from '../componentes/ExpensesForm';
+import ExpensesTable from '../componentes/ExpensesTable';
 
 class Wallet extends React.Component {
-  state = {
-    valor: 0,
-    cambio: 'BRL',
+  componentDidMount = () => {
+    const { fetchCurrenciesApi } = this.props;
+    fetchCurrenciesApi();
   }
 
-  // componentDidMount = () => {
-  //   this.currenciesApi();
-  // }
-
-  // currenciesApi = async () => {
-  //   const retornoApi = await fetch('https://economia.awesomeapi.com.br/json/all')
-  //     .then((item) => item.json())
-  //     .then((json) => json);
-  //   this.setState({ currencies: [...retornoApi] });
-  //   console.log(retornoApi);
-  // }
+  numberConverter = (number) => Number(number).toFixed(2)
+    .replace(/\d(?=(\d{3})+\.)/g, '$&,');
 
   render() {
-    const { valor, cambio,
-      // currencies,
-    } = this.state;
-    const { email } = this.props;
+    const { email, expenses } = this.props;
+
+    const expensivesTotal = this.numberConverter(expenses.reduce(
+      (acc, curr) => Number(curr.value * curr.exchangeRates[curr.currency].ask) + acc, 0,
+    ));
+
     return (
+
       <div>
         <header>
-          <h2 data-testid="email-field">{email}</h2>
-          <h2 data-testid="total-field">{valor}</h2>
-          <h2 data-testid="header-currency-field">{cambio}</h2>
-        </header>
-        <div>
-          {/* <h5>
-            {
-              currencies.filter((item) => (
-                <h4>{item}</h4>
-              ))
-            }
+          <h3>TrybeWallet</h3>
 
-          </h5> */}
-        </div>
+          <div>
+            <p data-testid="email-field">{email}</p>
+            <p data-testid="total-field">{expensivesTotal}</p>
+            <p data-testid="header-currency-field">BRL</p>
+          </div>
+
+          <ExpensesForm />
+
+        </header>
+        <main>
+          <ExpensesTable />
+        </main>
+
       </div>
     );
   }
 }
 
+const mapDispatchToProps = (dispatch) => ({
+  fetchCurrenciesApi: () => dispatch(currenciesApi()),
+});
+
 const mapStateToProps = (state) => ({
   email: state.user.email,
+  expenses: state.wallet.expenses,
 });
 
 Wallet.propTypes = {
+  fetchCurrenciesApi: propTypes.func.isRequired,
   email: propTypes.string.isRequired,
+  expenses: propTypes.arrayOf(propTypes.object).isRequired,
 };
 
-export default connect(mapStateToProps)(Wallet);
+export default connect(mapStateToProps, mapDispatchToProps)(Wallet);
