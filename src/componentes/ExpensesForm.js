@@ -23,6 +23,7 @@ class ExpensesForm extends React.Component {
     const { value, description, currency, method, tag } = this.state;
     const { valuesSave, expenses } = this.props;
     const obj = { id: expenses.length, value, currency, method, tag, description };
+
     valuesSave(obj);
     this.setState({
       value: '',
@@ -37,6 +38,7 @@ class ExpensesForm extends React.Component {
     const { value, description, currency, tag, method } = this.state;
     const { idOpenEdit, endEditExpense, expenses } = this.props;
     const obj = { id: idOpenEdit, value, currency, method, tag, description };
+
     const filterExpenses = expenses.map((item) => (item.id === idOpenEdit
       ? {
         ...obj, exchangeRates: item.exchangeRates } : item));
